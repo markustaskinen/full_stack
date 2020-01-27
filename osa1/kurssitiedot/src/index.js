@@ -11,7 +11,9 @@ const Header = (props) => {
 
 const Part = (props) => {
     return (
-        <p>{props.part} {props.exercises}</p>
+        <>
+            <p>{props.part} {props.exercises}</p>
+        </>
     )
 }
 
