@@ -7,8 +7,9 @@ function App() {
   const [ countries, setCountries ] = useState([])
   const [ show, setShow ] = useState('')
   const [ weather, setWeather ] = useState([])
+  const [ detailCountry, setDetailCountry ] = useState({})
   const api_key = process.env.REACT_APP_API_KEY
-
+  
   useEffect(() => {
     countryService
       .getAll()
@@ -17,7 +18,25 @@ function App() {
       })
   }, [])
 
-  const handleShowChange = (event) => setShow(event.target.value)
+  //Runs only after render and doesn't provoke a new render
+  useEffect(() => {
+    capitalWeather(api_key, detailCountry.capital)
+    console.log(`filtered country: ${detailCountry.name}`)
+    console.log(`capital: ${detailCountry.capital}`)
+  }, [detailCountry, api_key])
+
+  //should this update the state "countries"?
+  const showCountries = (show === '')
+  ? countries
+  : countries.filter(country =>
+      country.name.toUpperCase().includes(show.toUpperCase()))
+
+  const handleShowChange = (event) => {
+    setShow(event.target.value)
+    if (showCountries.length === 1) {
+      setDetailCountry(showCountries[0])
+    }
+  }
 
   const fillCountry = (id) => {
     const toFill = countries.find(country => country.alpha2Code === id).name
@@ -36,12 +55,10 @@ function App() {
     <div>
       <Filter inputValue={show} showChange={handleShowChange} />
       <CountryList
-        countries={countries}
         show={show}
+        showCountries={showCountries}
         onClick={fillCountry}
-        capitalWeather={capitalWeather}
-        weather={weather}
-        api_key={api_key} />
+        weather={weather} />
     </div>
   )
 }

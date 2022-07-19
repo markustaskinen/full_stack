@@ -4,8 +4,6 @@ const CountryData = ({ country, weather }) => {
     const languages = country.languages.map(language => 
         <li key={language.iso639_1}>{language.name}</li>
         )
-    //console.log(country)
-    //console.log(weather)
     return (
         <>
             <div>
@@ -21,6 +19,7 @@ const CountryData = ({ country, weather }) => {
             </div>
             <div>
                 <h3>weather in {country.capital}</h3>
+                {/*
                 <p>temperature: {weather.current.temperature}°C</p>
                 <img
                     src={weather.current.weather_icons[0]}
@@ -29,6 +28,7 @@ const CountryData = ({ country, weather }) => {
                 </img>
                 <p>wind: {weather.current.wind_speed}m/s {weather.current.wind_dir}<br></br>
                 humidity: {weather.current.humidity}%</p>
+                 */}
             </div>
         </>
     )

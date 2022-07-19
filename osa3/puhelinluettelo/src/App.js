@@ -7,10 +7,10 @@ import personService from './services/persons';
 
 
 const App = () => {
-  const [ persons, setPersons ] = useState([])
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ show, setShow ] = useState('')
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [show, setShow] = useState('')
   const [statusMessage, setStatusMessage] = useState('')
   const names = persons.map(person => person.name.toUpperCase())
 
@@ -40,17 +40,18 @@ const App = () => {
       number: newNumber
     }
     const duplicate = (persons.length > 0)
-    ? names.includes(newName.toUpperCase())
-    : false
+      ? names.includes(newName.toUpperCase())
+      : false
 
     if (duplicate) {
       if (window.confirm(`${newName} is already added to phonebook. Do you want to replace the old number with a new one?`)) {
-        const toUpdate = names.indexOf(newName.toUpperCase())
+        const updateIndex = names.indexOf(newName.toUpperCase())
+        const updateId = persons.find(person => person.name.toUpperCase() === newName.toUpperCase()).id
         const updated = persons
         personService
-          .update(toUpdate + 1, contactObject)
+          .update(updateId, contactObject)
           .then(returnedPerson => {
-            updated.splice(toUpdate, 1, contactObject)
+            updated.splice(updateIndex, 1, contactObject)
             setPersons(updated)
             showStatus(
               `The number of ${newName} has been replaced.`
@@ -62,7 +63,8 @@ const App = () => {
             showStatus(
               `Information of ${newName} has already been removed from the server.`
             )
-            setPersons(persons.filter(person => person.id !== toUpdate))
+            console.log(error.response.data)
+            setPersons(persons.filter(person => person.id !== updateId))
           })
       }
     }
@@ -76,13 +78,17 @@ const App = () => {
           )
           setNewName('')
           setNewNumber('')
-      })
+        })
+        .catch(error => {
+          console.log(error.response.data)
+          showStatus(error.response.data.error)
+        })
     }
   }
 
   const removeContact = (id) => {
     const toRemove = persons.find(person => person.id === id).name
-    
+
     if (window.confirm(`Are you sure you want to remove ${toRemove}?`)) {
       personService
         .remove(id)
@@ -105,7 +111,7 @@ const App = () => {
         nameChange={handleNameChange}
         number={newNumber}
         numberChange={handleNumberChange}
-        />
+      />
       <h2>Contacts</h2>
       <Filter inputValue={show} showChange={handleShowChange} />
       <ContactList persons={persons} show={show} onClick={removeContact} />

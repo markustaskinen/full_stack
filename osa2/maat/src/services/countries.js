@@ -1,8 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from 'axios'
-const countryUrl = 'https://restcountries.eu/rest/v2/all'
+const countryUrl = 'https://restcountries.com/v2/all'
 const weatherUrl = 'http://api.weatherstack.com/current'
 // API_KEY = 6396517320824bfe8ac8d6b4bc55ab32
+
 
 const getAll = () => {
     const request = axios.get(countryUrl)
