@@ -51,7 +51,7 @@ const App = () => {
         personService
           .update(updateId, contactObject)
           .then(returnedPerson => {
-            updated.splice(updateIndex, 1, contactObject)
+            updated.splice(updateIndex, 1, returnedPerson)
             setPersons(updated)
             showStatus(
               `The number of ${newName} has been replaced.`
@@ -60,11 +60,9 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
-            showStatus(
-              `Information of ${newName} has already been removed from the server.`
-            )
+            showStatus(error.response.data.error)
             console.log(error.response.data)
-            setPersons(persons.filter(person => person.id !== updateId))
+            //setPersons(persons.filter(person => person.id !== updateId))
           })
       }
     }
@@ -92,12 +90,11 @@ const App = () => {
     if (window.confirm(`Are you sure you want to remove ${toRemove}?`)) {
       personService
         .remove(id)
-        .then(() => {
-          setPersons(persons.filter(person => person.id !== id))
-          showStatus(
-            `${toRemove} removed from phonebook.`
-          )
-        })
+      
+      setPersons(persons.filter(person => person.id !== id))
+      showStatus(
+        `${toRemove} removed from phonebook.`
+      )
     }
   }
 
